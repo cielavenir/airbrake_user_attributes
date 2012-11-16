@@ -23,5 +23,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency("shoulda",       "~> 2.11.3")
 
   s.add_dependency 'airbrake',                  '~> 3.1.0'
-
+  s.add_dependency 'json'
 end
