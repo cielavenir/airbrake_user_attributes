@@ -1,6 +1,10 @@
 module Airbrake
   module CurrentUser
 
+    def self.filtered_attributes_config
+      %W[password token login sign_in per_page _at passphrase _key]
+    end
+
     # Returns filtered attributes for current user
     def self.filtered_attributes(controller)
       return {} unless controller.respond_to?(:current_user, true)
@@ -15,8 +19,9 @@ module Airbrake
       return {} unless user && user.respond_to?(:attributes)
 
       # Removes auth-related fields
+      config = filtered_attributes_config
       attributes = user.attributes.reject do |k, v|
-        /password|token|login|sign_in|per_page|_at$/ =~ k
+        config.any?{|e|k.end_with?(e)}
       end
       # Try to include a URL for the user, if possible.
       if url_method = [:user_url, :admin_user_url].detect {|m| controller.respond_to?(m) }
